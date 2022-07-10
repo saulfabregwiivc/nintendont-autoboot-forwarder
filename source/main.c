@@ -14,9 +14,10 @@
 #include "app_booter_bin.h"
 
 // Name of homebrew to autoboot, with its arguments
-#define HOMEBREW_APP_DIR "snes9xrx-YI2"
-#define ARGUMENT_1       "sd:/ROMs/SNES"
-#define ARGUMENT_2       "Super Mario World 2.sfc"
+#define HOMEBREW_APP_DIR "RA-HEXAECO"
+#define ARGUMENT_1       "sd:/apps/RA-HEXAECO/roms"
+#define ARGUMENT_2       "Mario Kart Advance.gba"
+#define ARGUMENT_3       "sd:/apps/RA-HEXAECO/gpsp_mka_config.cfg"
 
 static u8 *EXECUTE_ADDR = (u8*)0x92000000;
 static u8 *BOOTER_ADDR = (u8*)0x92F00000;
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
 	__io_wiisd.isInserted();
 	fatMount("sd", &__io_wiisd, 0, 4, 64);
 
-	const char *fPath = "sd:/apps/" HOMEBREW_DIR "/boot.dol";
+	const char *fPath = "sd:/apps/" HOMEBREW_DIR "/gpsp.dol";
 	FILE *f = fopen(fPath,"rb");
 	if(!f)
 	{
@@ -70,15 +71,17 @@ int main(int argc, char *argv[])
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
 	const char *argument1 = ARGUMENT_1;
 	const char *argument2 = ARGUMENT_2;
+	const char *argument3 = ARGUMENT_3;
 	const size_t full_fPath_len = strlen(fPath)+1;
 	const size_t full_argument1_len = strlen(argument1)+1;
 	const size_t full_argument2_len = strlen(argument2)+1;
-	const size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_romDir_len+full_romFile_len;
+	const size_t full_argument3_len = strlen(argument3)+1;
+	const size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_argument1_len+full_argument2_len+full_argument3_len;
 
 	memset(ARGS_ADDR, 0, full_args_len);
 	ARGS_ADDR->argvMagic = ARGV_MAGIC;
 	ARGS_ADDR->commandLine = CMD_ADDR;
-	ARGS_ADDR->length = full_fPath_len+full_argument1_len+full_argument2_len;
+	ARGS_ADDR->length = full_fPath_len+full_argument1_len+full_argument2_len+full_argument3_len;
 	ARGS_ADDR->argc = 3;
 
 	memcpy(CMD_ADDR, fPath, full_fPath_len);
@@ -86,6 +89,8 @@ int main(int argc, char *argv[])
 	memcpy(CMD_ADDR, argument1, full_argument1_len);
 	CMD_ADDR += full_argument1_len;
 	memcpy(CMD_ADDR, argument2, full_argument2_len);
+	CMD_ADDR += full_argument2_len;
+	memcpy(CMD_ADDR, argument3, full_argument3_len);
 	DCFlushRange(ARGS_ADDR, full_args_len);
 
 	//possibly affects nintendont speed?
