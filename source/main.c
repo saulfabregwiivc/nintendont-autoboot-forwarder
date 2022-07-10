@@ -13,11 +13,10 @@
 #include <sdcard/wiisd_io.h>
 #include "app_booter_bin.h"
 
-//comment this out for non-autoboot version
-#define FW_AUTOBOOT 1
-
 // Name of homebrew to autoboot
 #define HOMEBREW_DIR "snes9xrx-YI2"
+#define ROM_DIR      "sd:/ROMs/SNES"
+#define ROM_FILE     "Super Mario World 2.sfc"
 
 static u8 *EXECUTE_ADDR = (u8*)0x92000000;
 static u8 *BOOTER_ADDR = (u8*)0x92F00000;
@@ -69,16 +68,24 @@ int main(int argc, char *argv[])
 	ICInvalidateRange(BOOTER_ADDR,app_booter_bin_size);
 
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
-	size_t full_fPath_len = strlen(fPath)+1;
-	size_t full_args_len = sizeof(struct __argv)+full_fPath_len;
+	const char *romDir = ROM_DIR;
+	const char *romFile = ROM_FILE;
+	const size_t full_fPath_len = strlen(fPath)+1;
+	const size_t full_romDir_len = strlen(romDir)+1;
+	const size_t full_romFile_len = strlen(romFile)+1;
+	const size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_romDir_len+full_romFile_len;
 
 	memset(ARGS_ADDR, 0, full_args_len);
 	ARGS_ADDR->argvMagic = ARGV_MAGIC;
 	ARGS_ADDR->commandLine = CMD_ADDR;
-	ARGS_ADDR->length = full_fPath_len;
-	ARGS_ADDR->argc = 1;
+	ARGS_ADDR->length = full_fPath_len+full_romDir_len+full_romFile_len;
+	ARGS_ADDR->argc = 3;
 
 	memcpy(CMD_ADDR, fPath, full_fPath_len);
+	CMD_ADDR += full_fPath_len;
+	memcpy(CMD_ADDR, romDir, full_romDir_len);
+	CMD_ADDR += full_romDir_len;
+	memcpy(CMD_ADDR, romFile, full_romFile_len);
 	DCFlushRange(ARGS_ADDR, full_args_len);
 
 	//possibly affects nintendont speed?
