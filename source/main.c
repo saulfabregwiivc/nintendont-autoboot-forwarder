@@ -13,10 +13,10 @@
 #include <sdcard/wiisd_io.h>
 #include "app_booter_bin.h"
 
-// Name of homebrew to autoboot
-#define HOMEBREW_DIR "snes9xrx-YI2"
-#define ROM_DIR      "sd:/ROMs/SNES"
-#define ROM_FILE     "Super Mario World 2.sfc"
+// Name of homebrew to autoboot, with its arguments
+#define HOMEBREW_APP_DIR "snes9xrx-YI2"
+#define ARGUMENT_1       "sd:/ROMs/SNES"
+#define ARGUMENT_2       "Super Mario World 2.sfc"
 
 static u8 *EXECUTE_ADDR = (u8*)0x92000000;
 static u8 *BOOTER_ADDR = (u8*)0x92F00000;
