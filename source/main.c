@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	__io_wiisd.isInserted();
 	fatMount("sd", &__io_wiisd, 0, 4, 64);
 
-	const char *fPath = "sd:/apps/" HOMEBREW_DIR "/gpsp.dol";
+	const char *fPath = "sd:/apps/" HOMEBREW_APP_DIR "/gpsp.dol";
 	FILE *f = fopen(fPath,"rb");
 	if(!f)
 	{
