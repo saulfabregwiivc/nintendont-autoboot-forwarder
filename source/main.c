@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	__io_wiisd.isInserted();
 	fatMount("sd", &__io_wiisd, 0, 4, 64);
 
-	const char *fPath = "sd:/apps/" HOMEBREW_DIR "/boot.dol";
+	const char *fPath = "sd:/apps/" HOMEBREW_APP_DIR "/boot.dol";
 	FILE *f = fopen(fPath,"rb");
 	if(!f)
 	{
