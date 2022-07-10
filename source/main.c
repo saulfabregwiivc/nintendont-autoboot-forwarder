@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 	const size_t full_fPath_len = strlen(fPath)+1;
 	const size_t full_argument1_len = strlen(argument1)+1;
 	const size_t full_argument2_len = strlen(argument2)+1;
-	const size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_romDir_len+full_romFile_len;
+	const size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_argument1_len+full_argument2_len;
 
 	memset(ARGS_ADDR, 0, full_args_len);
 	ARGS_ADDR->argvMagic = ARGV_MAGIC;
